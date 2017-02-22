@@ -1,0 +1,36 @@
+{
+    "CurrentState": "data",
+    "EinsatzData": [{
+        "EinsatzID": "PU 123",
+        "Status": 3,
+        "Alarmstufe": "S1",
+        "Meldebild": "Gasaustritt bzw. -gebrechen",
+        "Nummer1": "100.000",
+        "Nummer2": "",
+        "Nummer3": "",
+        "Plz": "3021",
+        "Strasse": "Hauptstrasse",
+        "Ort": "Pressbaum",
+        "Abschnitt": "BasisAbschnitt",
+        "Objekt": "",
+        "ObjektId": "",
+        "Bemerkung": "",
+        "EinsatzErzeugt": "2016-01-01T12:34:45",
+        "Melder": "",
+        "MelderTelefon": "",
+        "EinsatzNummer": 1234567890,
+        "Dispositionen": [{
+            "Name": "Pressbaum",
+            "EldisId": 123456,
+            "IsEigenalarmiert": false,
+            "DispoTime": "2016-01-01T12:34:45",
+            "AlarmTime": "2016-01-01T12:34:45",
+            "AusTime": "2016-01-01T12:34:45",
+            "IsBackground": false
+        }],
+        "Rsvp": {
+            "Yes": 0,
+            "No": 0
+        }
+    }]
+}

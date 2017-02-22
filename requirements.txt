@@ -1,0 +1,6 @@
+pycups
+datetime
+logging
+selenium
+requests
+geopy

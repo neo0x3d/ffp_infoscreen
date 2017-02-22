@@ -1,0 +1,33 @@
+{
+    "CurrentState": "data",
+    "EinsatzData": [{
+        "EinsatzID": "PU 123",
+        "Status": 4,
+        "Alarmstufe": "T1",
+        "Meldebild": "Autobahn - Bergung",
+        "Nummer1": "275.000",
+        "Nummer2": "",
+        "Nummer3": "",
+        "Plz": "",
+        "Strasse": "A1 (RiFb. Wien)",
+        "Ort": "NIEDERÖSTERREICH",
+        "Abschnitt": "A1 (RiFb. Wien), BU Gschaid >> Landesgrenze Wien",
+        "Objekt": "",
+        "ObjektId": "",
+        "Bemerkung": "Keine Verletzte",
+        "EinsatzErzeugt": "2016-01-01T12:34:45",
+        "Melder": "",
+        "MelderTelefon": "",
+        "EinsatzNummer": 1234567890,
+        "Dispositionen": [{
+            "Name": "Pressbaum",
+            "EldisId": 123456.0,
+            "IsEigenalarmiert": false,
+            "DispoTime": "2016-01-01T12:34:45",
+            "AlarmTime": "2016-01-01T12:34:45",
+            "AusTime": "2016-01-01T12:34:45",
+            "EinTime": "2016-01-01T12:34:45",
+            "IsBackground": false
+        }]
+    }]
+}

@@ -1,0 +1,34 @@
+{
+    "CurrentState": "data",
+    "EinsatzData": [{
+        "EinsatzID": "PU 123",
+        "Status": 3,
+        "Alarmstufe": "T1",
+        "Meldebild": "Fahrzeugbergung",
+        "Nummer1": "100.000",
+        "Nummer2": "",
+        "Nummer3": "",
+        "Plz": "3021",
+        "Strasse": "Hauptstrasse",
+        "Ort": "Pressbaum",
+        "Abschnitt": "",
+        "Objekt": "",
+        "ObjektId": "",
+        "Bemerkung": "Polizei vor Ort",
+        "EinsatzErzeugt": "2016-01-01T12:34:45",
+        "Melder": "",
+        "MelderTelefon": "",
+        "EinsatzNummer": 1234567890,
+        "Dispositionen": [{
+            "Name": "Pressbaum",
+            "EldisId": 123456,
+            "IsEigenalarmiert": false,
+            "DispoTime": "2016-01-01T12:34:45",
+            "IsBackground": true
+        }],
+        "Rsvp": {
+            "Yes": 0,
+            "No": 0
+        }
+    }]
+}

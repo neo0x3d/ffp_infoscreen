@@ -1,0 +1,33 @@
+{
+    "CurrentState": "data",
+    "EinsatzData": [{
+        "EinsatzID": "PU 123",
+        "Status": 4,
+        "Alarmstufe": "B2",
+        "Meldebild": "Fahrzeugbrand",
+        "Nummer1": "77.000",
+        "Nummer2": "",
+        "Nummer3": "",
+        "Plz": "3021",
+        "Strasse": "Hauptstraße",
+        "Ort": "Pressbaum",
+        "Abschnitt": "",
+        "Objekt": "Volksschule Pressbaum",
+        "ObjektId": "2535418",
+        "Bemerkung": "Autobrand bei Volksschule",
+        "EinsatzErzeugt": "2016-01-01T12:34:45",
+        "Melder": "",
+        "MelderTelefon": "",
+        "EinsatzNummer": 1234567890,
+        "Dispositionen": [{
+            "Name": "Pressbaum",
+            "EldisId": 123456.0,
+            "IsEigenalarmiert": false,
+            "DispoTime": "2016-01-01T12:34:45",
+            "AlarmTime": "2016-01-01T12:34:45",
+            "AusTime": "2016-01-01T12:34:45",
+            "EinTime": "2016-01-01T12:34:45",
+            "IsBackground": false
+        }]
+    }]
+}
