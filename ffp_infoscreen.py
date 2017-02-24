@@ -34,7 +34,7 @@ import cups
 use_testdata = ""
 
 # config file
-with open("ffp_infoscreen_config.json") as config_fh:
+with open("/home/data/github/ffp_infoscreen/ffp_infoscreen_config.json") as config_fh:
     config = json.load(config_fh)
 
 # logging
