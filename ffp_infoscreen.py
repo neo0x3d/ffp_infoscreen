@@ -20,17 +20,17 @@ from selenium.webdriver.remote.command import Command
 import cups
 
 # TODO
-# info queue for screens should contain json data
-# add http server to print
-# add http server to generate map coordinates / map html stream
-# get the lat/long highway coortinates from a locally saved file
+# status queue for the screens should contain json data to get more detailed information for each screen
+# add http server to print the WASTL print page on demand (short info + map)
+# add http server to generate html stream on demand, generating coordinates beforehand
+# parse lat/long coordinates from a local file and use them for the highway (decide on a generic input format, decide how and where they should be parsed and in which format they should be handled in the script)
 
 
 ##########################################################################
 # global config
 ##########################################################################
 
-# use testdata (json file, derived from real emergency with masked sensitive data)
+# use testdata (json file from the testdata folder, derived from real emergencies with masked sensitive data)
 use_testdata = ""
 
 # config file
@@ -48,9 +48,9 @@ logging.captureWarnings(True)
 # needs warning module?
 
 
-##########################################################################
+################################################################################
 # helper functions
-##########################################################################
+################################################################################
 
 def check_wastl(url, cookie_id, cookie_data):
     """
@@ -168,6 +168,11 @@ def gen_mapparam(json_parsed, highway_km):
     logging.info("generated lat/long:" + mapparam)
 
     return 0, mapparam
+
+
+################################################################################
+# screen service process
+################################################################################
 
 
 def check_screen_p(status_qeue, screen_parameter):
@@ -309,9 +314,9 @@ def check_screen_p(status_qeue, screen_parameter):
         reload_en = False
 
 
-##########################################################################
-# main process
-##########################################################################
+################################################################################
+# updater thread
+################################################################################
 
 def update_routine():
     """
@@ -361,9 +366,9 @@ if __name__ == '__main__':
     update_routine()
 
 
-##########################################################################
+################################################################################
 # http server
-##########################################################################
+################################################################################
 #
 # def print_infopage(url):
 #     """

@@ -3,7 +3,7 @@
 General purpose CentOS 7 installation with basic security measures and additional setup for:
 
 - ffp_infoscreen (this repo)
-- ffp_fotoupload (comming soon)
+- ffp_fotoupload [ffp_fotoupload](https://github.com/neo0x3d/ffp_fotoupload)
 
 ## Basic Installation
 
@@ -32,9 +32,9 @@ CentOS 7 can be setup headless (without X11 and DE), but since this computer wil
 
 Update all system packages after the fresh installation
 
-## Setup root mail forwarding and test it (requires MDA, e.g. Postfix running)
+## Setup root mail forwarding and test it (requires running MDA, e.g. Postfix)
 
-/etc/aliases
+/etc/aliases (at the bottom)
 
 ```
 root: user@domain.tld
@@ -67,7 +67,7 @@ ClientAliveInterval 600
 ClientAliveCountMax 3
 ```
 
-And install fail2ban to automatically ban IP adresses.
+And install fail2ban to automatically ban IPs after failed login attempts.
 
 ```
 $ sudo yum install fail2ban
@@ -107,6 +107,8 @@ update_cmd = security
 apply_updates = yes
 ```
 
+Enable and start the service via Systemd
+
 ```
 $ sudo systemctl enable yum-cron
 $ sudo systemctl start yum-cron
@@ -114,7 +116,7 @@ $ sudo systemctl start yum-cron
 
 ## Switch the system log to persistent
 
-Switch journald to persistant logging (logs will survive reboots). [Further information](https://www.digitalocean.com/community/tutorials/how-to-use-journalctl-to-view-and-manipulate-systemd-logs)
+Switch journald to persistant logging (logs will survive reboots). [Further information at digitalocean](https://www.digitalocean.com/community/tutorials/how-to-use-journalctl-to-view-and-manipulate-systemd-logs)
 
 /etc/systemd/journald.conf
 

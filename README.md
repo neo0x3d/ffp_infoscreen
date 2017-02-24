@@ -17,7 +17,7 @@ $ sudo pip3 install requirements.txt
 Example setup for CentOS 7 host: [here](CentOS7_setup.md)
 
 - Add a user with minimal permissions, who will be automatically logged in (will run the infoscreen script)
-- Disable screen saver
+- Disable screen saver and screen lock for this user
 
 ### 3\. Download ffp_infoscreen
 
@@ -45,7 +45,7 @@ Visit <https://infoscreen.florian10.info/ows/infoscreen/v3/> with Firefox and en
 
 Systemd is used to keep the script alive and restart if it crashes.
 
-Set the path to the python script in the ffp_infoscreen@.service file, then copy it to the systemds folder, enable and start.
+Set the path to the python script in the ffp_infoscreen@.service file, then copy it to the systemds system folder, enable and start under the user selected before.
 
 ```
 $ sudo cp ffp_infoscreen@.service /etc/systemd/system
