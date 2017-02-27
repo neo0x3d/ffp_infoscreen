@@ -20,11 +20,10 @@ from selenium.webdriver.remote.command import Command
 import cups
 
 # TODO
-# status queue for the screens should contain json data to get more detailed information for each screen
 # add http server to print the WASTL print page on demand (short info + map)
 # add http server to generate html stream on demand, generating coordinates beforehand
 # parse lat/long coordinates from a local file and use them for the highway (decide on a generic input format, decide how and where they should be parsed and in which format they should be handled in the script)
-
+# » maybe gpx?
 
 ##########################################################################
 # global config
@@ -38,7 +37,7 @@ with open("/home/data/github/ffp_infoscreen/ffp_infoscreen_config.json") as conf
     config = json.load(config_fh)
 
 # logging
-logfile = "".join([config["log"]["path"], "fire_mctrl", datetime.now().strftime(config["timestamp"])])
+logfile = "".join([config["log"]["path"], "ffp_infoscreen", datetime.now().strftime(config["timestamp"])])
 
 logging.basicConfig(level=logging.DEBUG,
                     filename=logfile,
@@ -72,37 +71,39 @@ def check_wastl(url, cookie_id, cookie_data):
     try:
         req = requests.get(url, cookies={cookie_id: cookie_data})
         if req.status_code == 200:
-            logging.debug("Kremser json: " + req.text)
+            logging.debug("WASTL json: " + req.text)
             status = json.loads(req.text)
         else:
-            logging.warning("get returned status code: " + str(req.status_code))
+            logging.warning("WASTL returned unexpected status code (!=200): " + str(req.status_code))
 
         # parse data from WASTL
         if status["CurrentState"] == "data":
             if status["EinsatzData"] == []:
-                return "off", status
+                return "normal", status  # idle status
             else:
-                return "?", status
+                return status["EinsatzData"][0]["Alarmstufe"], status  # emergency status
 
         elif status["CurrentState"] == "token" or status["CurrentState"] == "waiting":
-            retmsg = "Token not unlocked, CurrentState:" + str(status["CurrentState"])
+            retmsg = "WASTL Cookie not accepted, CurrentState:" + str(status["CurrentState"])
             return retmsg, status
         else:
-            retmsg = "unknown CurrentState value:" + str(status["CurrentState"])
-            return retmsg, status
+            logging.error("unknown CurrentState from WASTL: " + str(status))
+            return "error", status
 
     except NameError:
         return "json did not contain CurrentState", status + "\n cookie correct?"
     except Exception as exceptmsg:
-        logging.error(str(exceptmsg))
-        return "unknown error" + str(exceptmsg), ""
+        logging.error("exceipion while querrying WASTL: " + str(exceptmsg))
+        return "exception", status
 
 
-def gen_mapparam(json_parsed, highway_km):
+def gen_mapparam(json_parsed, highway_name, highway_km):
     """
-    Generate coordinates from the adress and map type
+    Generate coordinates from the adress
+
     Args:
-        json_parsed: config from wastl, includes address
+        json_parsed: config from WASTL, includes address
+        highway_name: string of the highways name
         highway_km: highway km with matching gps coordinates
     Returns:
         status code (0 in case of success)
@@ -111,7 +112,7 @@ def gen_mapparam(json_parsed, highway_km):
 
     try:
         # Autobahn adress (km) expected
-        if "A1" in json_parsed["EinsatzData"][0]["Strasse"]:
+        if highway_name in json_parsed["EinsatzData"][0]["Strasse"]:
             logging.info("A1 found in \"Strasse\" key")
             nr1 = json_parsed["EinsatzData"][0]["Nummer1"]
 
@@ -181,10 +182,10 @@ def check_screen_p(status_qeue, screen_parameter):
 
     Args:
         status_qeue: queue which will provide status updates for the screen, triggers updates
-        screen_parameter: paramter (urls, positions, reload settings) for this screen
+        screen_parameter: paramter (urls, positions, reload settings), directly taken from config file
     """
 
-    # max_x, max_y, is F11 maximized
+    # max_status = [int max_x, int max_y, if F11 maximized]
     max_status = [0, 0, False]
 
     def webdriver_isalive(driver):
@@ -329,16 +330,19 @@ def update_routine():
         alarm_code = wastl_msg["EinsatzData"][0]["Alarmstufe"]
     else:
         # fetch current WASTL status
-        alarm_code, status = check_wastl(config["wastl"]["url"],
-                                         config["wastl"]["cookie_id"], config["wastl"]["cookie_data"])
+        alarm_code, wastl_msg = check_wastl(config["wastl"]["url"],
+                                            config["wastl"]["cookie_id"], config["wastl"]["cookie_data"])
 
-    # check if WASTL status is valid
+    # check if WASTL status is valid and assign a code for the screen checker process
+    # this way, future modifications to accept a different information source will be easy
     if alarm_code in config["wastl"]["valid_alarmcodes"]:
         logging.debug("valid WASTL alarm code: " + str(alarm_code))
         code_for_screen = "alarm"
-    else:
-        logging.error("check_wastl() non valid alarmcode: " + str(alarm_code))
+    elif alarm_code == "normal":
         code_for_screen = "normal"
+    else:
+        logging.error("check_wastl() returned non valid alarmcode: " + str(alarm_code))
+        code_for_screen = "error"
 
     # update all screens
     for i in range(0, count):

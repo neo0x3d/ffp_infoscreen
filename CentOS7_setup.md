@@ -105,6 +105,13 @@ $ sudo yum install yum-cron
 ```
 update_cmd = security
 apply_updates = yes
+[email]
+# The address to send email messages from.
+email_from = root@localhost
+# List of addresses to send messages to.
+email_to = root
+# Name of the host to connect to to send email messages.
+email_host = localhost
 ```
 
 Enable and start the service via Systemd
@@ -112,6 +119,18 @@ Enable and start the service via Systemd
 ```
 $ sudo systemctl enable yum-cron
 $ sudo systemctl start yum-cron
+```
+
+To automatically reboot after a new kernel has been isntalled, create following file: /etc/cron.daily/1new-kernel-reboot
+
+```
+#!/bin/bash
+grubconf=/boot/grub/grub.conf
+entry=`cat $grubconf | grep '^default' | cut -d '=' -f2`
+entry=`expr $entry + 1`
+if [ "`cat $grubconf | grep '^title' | tail -n +$entry | head -1 | sed -e 's/.*(\(.*\)).*/\1/'`" != "`uname -r`" ]; then
+  sleep 10 ; shutdown -r +5
+fi
 ```
 
 ## Switch the system log to persistent

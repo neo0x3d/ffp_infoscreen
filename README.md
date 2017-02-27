@@ -1,5 +1,7 @@
 # FFP_Infoscreen
 
+[![License: GPL v2](https://img.shields.io/badge/License-GPL%20v2-blue.svg)](https://img.shields.io/badge/License-GPL%20v2-blue.svg)
+
 NOTE: Not all components are published yet!
 
 Display helpful information for the volunteer fire department depending on current WASTL status.

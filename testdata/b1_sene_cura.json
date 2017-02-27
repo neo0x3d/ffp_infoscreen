@@ -1,0 +1,58 @@
+{
+    "CurrentState": "data",
+    "EinsatzData": [{
+        "EinsatzID": "PU 100",
+        "Status": 3,
+        "Alarmstufe": "B1",
+        "Meldebild": "TUS- od. Infranet-Alarm",
+        "Nummer1": "6.000",
+        "Nummer2": "",
+        "Nummer3": "",
+        "Plz": "3021",
+        "Strasse": "Sanatoriumstrasse",
+        "Ort": "Pressbaum",
+        "Abschnitt": "",
+        "Objekt": "Pflegezentrum Pressbaum",
+        "ObjektId": "888888",
+        "Bemerkung": "",
+        "EinsatzErzeugt": "2017-02-02T02:02:22",
+        "Melder": "0016-01: Pflegezentrum Pressbaum",
+        "MelderTelefon": "",
+        "EinsatzNummer": 8709159819,
+        "Dispositionen": [{
+            "Name": "Pressbaum",
+            "EldisId": 333333.0,
+            "IsEigenalarmiert": false,
+            "DispoTime": "2017-02-02T02:04:22",
+            "AlarmTime": "2017-02-02T02:05:22",
+            "AusTime": "2017-02-02T02:12:22",
+            "IsBackground": false
+        }, {
+            "Name": "Rekawinkel",
+            "EldisId": 555555.0,
+            "IsEigenalarmiert": false,
+            "DispoTime": "2017-02-02T02:04:22",
+            "IsBackground": true
+        }, {
+            "Name": "Rekawinkel",
+            "EldisId": 555555.0,
+            "IsEigenalarmiert": false,
+            "DispoTime": "2017-02-02T02:04:22",
+            "AlarmTime": "2017-02-02T02:05:22",
+            "AusTime": "2017-02-02T02:13:22",
+            "IsBackground": false
+        }, {
+            "Name": "WUP-Rekawinkel",
+            "EldisId": 1234.0,
+            "IsEigenalarmiert": false,
+            "DispoTime": "2017-02-02T02:04:22",
+            "AlarmTime": "2017-02-02T02:05:22",
+            "AusTime": "2017-02-02T02:15:22",
+            "IsBackground": false
+        }],
+        "Rsvp": {
+            "Yes": 0,
+            "No": 0
+        }
+    }]
+}
