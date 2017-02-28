@@ -187,6 +187,7 @@ def check_screen_p(status_qeue, screen_parameter):
 
     # max_status = [int max_x, int max_y, if F11 maximized]
     max_status = [0, 0, False]
+    # is the cookielist loaded?
     cookie_status = [False]
 
     def webdriver_isalive(driver):
@@ -214,6 +215,7 @@ def check_screen_p(status_qeue, screen_parameter):
 
         """
         if cookie_status_lst[0] is False:
+            driver.delete_all_cookies()
             for nr in range(len(cookie_lst)):
                 cookie = {'name': cookie_lst[nr][0], 'value': cookie_lst[nr][1]}
                 logging.debug("{} adding cookie nr: {}, content: {}".format(os.getpid(), nr, cookie))
@@ -235,9 +237,9 @@ def check_screen_p(status_qeue, screen_parameter):
             if not webdriver_isalive(selenium_handler[0]):
                 logging.warning("{} webdriver not alive, hard reset".format(os.getpid()))
                 try:  # try to quit the webdriver, may fail if the instance is already dead
-                    selenium_handler[0].quit()
                     maximized[2] = False
                     cookie_stat_lst[0] = False
+                    selenium_handler[0].quit()
                 except Exception:
                     pass
                 selenium_handler[0] = webdriver.Firefox()
@@ -248,9 +250,12 @@ def check_screen_p(status_qeue, screen_parameter):
                 if force_reload:
                     logging.debug("{} enforced reloading of url".format(os.getpid()))
                     selenium_handler[0].get(url)
+                    cookie_stat_lst[0] = False
+                    add_cookies(selenium_handler[0], cookies, cookie_stat_lst)
             else:
                 logging.debug("{} url incorrect, changing from: {} to: {}".format(os.getpid(), cur_url, url))
                 selenium_handler[0].get(url)
+                cookie_stat_lst[0] = False
                 add_cookies(selenium_handler[0], cookies, cookie_stat_lst)
 
             # check if position has changed
@@ -324,14 +329,17 @@ def check_screen_p(status_qeue, screen_parameter):
         # set url according to status code
         if current_status == "normal":
             url = screen_parameter["url_normal"]
+            cookie_list = screen_parameter["cookie_list_normal"]
         elif current_status == "alarm":
             url = screen_parameter["url_alarm"]
+            cookie_list = screen_parameter["cookie_list_alarm"]
         else:
             url = "https://isitdns.com/"
+            cookie_list = []
 
         checkscreen(sel_instance, (screen_parameter["pos_x"],
                                    screen_parameter["pos_y"]),
-                    url, reload_en, max_status, screen_parameter["cookie_list"], cookie_status)
+                    url, reload_en, max_status, cookie_list, cookie_status)
 
         reload_en = False
 
@@ -358,7 +366,7 @@ def update_routine():
 
     # check if WASTL status is valid and assign a code for the screen checker process
     # this way, future modifications to accept a different information source will be easy
-    if alarm_code in config["wastl"]["valid_alarmcodes"]:
+    if alarm_code.lower() in config["wastl"]["valid_alarmcodes"]:
         logging.debug("valid WASTL alarm code: " + str(alarm_code))
         code_for_screen = "alarm"
     elif alarm_code == "normal":

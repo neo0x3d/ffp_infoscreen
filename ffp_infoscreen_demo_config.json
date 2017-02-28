@@ -12,7 +12,10 @@
     "screen": [{
         "url_normal": "http://www.ff-pressbaum.at/",
         "url_alarm": "https://infoscreen.florian10.info/ows/infoscreen/v3/",
-        "cookie_list": [
+        "cookie_list_normal": [
+            ["cookie_name", "cookie_value"]
+        ],
+        "cookie_list_alarm": [
             ["cookie_name", "cookie_value"]
         ],
         "pos_x": 0,
