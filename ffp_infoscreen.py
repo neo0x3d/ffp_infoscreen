@@ -51,12 +51,12 @@ logging.captureWarnings(True)
 # helper functions
 ################################################################################
 
-def check_wastl(url, cookie_id, cookie_data):
+def check_wastl(url, wastl_cookie):
     """
     check WASTL / FF-Krems to get current status
     Args:
         url: url to the json status file
-        cookie: access cookie to retrieve the status file
+        wastl_cookie: access cookie to retrieve the status file
     Returns:
         status_code: classification and size in the case of an alarm (e.g. t1, s2, b4...)
             "off" in the cas of no alarm
@@ -69,7 +69,7 @@ def check_wastl(url, cookie_id, cookie_data):
         max_retries=requests.adapters.Retry(total=20, backoff_factor=0.1, status_forcelist=[500, 502, 503, 504])))
 
     try:
-        req = requests.get(url, cookies={cookie_id: cookie_data})
+        req = requests.get(url, cookies={wastl_cookie[0]: wastl_cookie[1]})
         if req.status_code == 200:
             logging.debug("WASTL json: " + req.text)
             status = json.loads(req.text)
@@ -187,6 +187,7 @@ def check_screen_p(status_qeue, screen_parameter):
 
     # max_status = [int max_x, int max_y, if F11 maximized]
     max_status = [0, 0, False]
+    cookie_status = [False]
 
     def webdriver_isalive(driver):
         """
@@ -203,7 +204,24 @@ def check_screen_p(status_qeue, screen_parameter):
         except Exception:
             return False
 
-    def checkscreen(selenium_handler, position, url, force_reload, maximized):
+    def add_cookies(driver, cookie_lst, cookie_status_lst):
+        """
+        Add all cookies from a list to the webdriver
+
+        Args:
+            driver: webdriver instance
+            cookie_lst: list of cookie(s)
+
+        """
+        if cookie_status_lst[0] is False:
+            for nr in range(len(cookie_lst)):
+                cookie = {'name': cookie_lst[nr][0], 'value': cookie_lst[nr][1]}
+                logging.debug("{} adding cookie nr: {}, content: {}".format(os.getpid(), nr, cookie))
+                driver.add_cookie(cookie)
+            cookie_status_lst[0] = True
+            driver.refresh()
+
+    def checkscreen(selenium_handler, position, url, force_reload, maximized, cookies, cookie_stat_lst):
         """
         Check if the webdriver is workig as supposed (url, position, size/fullscreen)
 
@@ -219,6 +237,7 @@ def check_screen_p(status_qeue, screen_parameter):
                 try:  # try to quit the webdriver, may fail if the instance is already dead
                     selenium_handler[0].quit()
                     maximized[2] = False
+                    cookie_stat_lst[0] = False
                 except Exception:
                     pass
                 selenium_handler[0] = webdriver.Firefox()
@@ -232,6 +251,7 @@ def check_screen_p(status_qeue, screen_parameter):
             else:
                 logging.debug("{} url incorrect, changing from: {} to: {}".format(os.getpid(), cur_url, url))
                 selenium_handler[0].get(url)
+                add_cookies(selenium_handler[0], cookies, cookie_stat_lst)
 
             # check if position has changed
             currentpos = selenium_handler[0].get_window_position()
@@ -310,7 +330,8 @@ def check_screen_p(status_qeue, screen_parameter):
             url = "https://isitdns.com/"
 
         checkscreen(sel_instance, (screen_parameter["pos_x"],
-                                   screen_parameter["pos_y"]), url, reload_en, max_status)
+                                   screen_parameter["pos_y"]),
+                    url, reload_en, max_status, screen_parameter["cookie_list"], cookie_status)
 
         reload_en = False
 
@@ -330,8 +351,10 @@ def update_routine():
         alarm_code = wastl_msg["EinsatzData"][0]["Alarmstufe"]
     else:
         # fetch current WASTL status
-        alarm_code, wastl_msg = check_wastl(config["wastl"]["url"],
-                                            config["wastl"]["cookie_id"], config["wastl"]["cookie_data"])
+        # alarm_code, wastl_msg = check_wastl(config["wastl"]["url"],
+        #                                     config["wastl"]["cookie_id"], config["wastl"]["cookie_data"])
+
+        alarm_code, wastl_msg = check_wastl(config["wastl"]["url"], config["wastl"]["cookie"])
 
     # check if WASTL status is valid and assign a code for the screen checker process
     # this way, future modifications to accept a different information source will be easy

@@ -4,8 +4,7 @@
     "wastl": {
         "url": "https://infoscreen.florian10.info/ows/infoscreen/einsatz.ashx?f=json",
         "valid_alarmcodes": ["b1", "b2", "b3", "b4", "s1", "s2", "s3", "t1", "t2", "t3"],
-        "cookie_id": "xFFK_InfoScrCookie_SessionID",
-        "cookie_data": ""
+        "cookie": ["cookie_name", "cookie_value"]
     },
     "log": {
         "path": "log/"
@@ -13,15 +12,10 @@
     "screen": [{
         "url_normal": "http://www.ff-pressbaum.at/",
         "url_alarm": "https://infoscreen.florian10.info/ows/infoscreen/v3/",
+        "cookie_list": [
+            ["cookie_name", "cookie_value"]
+        ],
         "pos_x": 0,
-        "pos_y": 0,
-        "always_reload": false,
-        "periodic_reload": 20
-    }],
-    "screentemplate": [{
-        "url_normal": "http://www.ff-pressbaum.at/",
-        "url_alarm": "http://www.openfiremap.org/",
-        "pos_x": 1336,
         "pos_y": 0,
         "always_reload": false,
         "periodic_reload": 20
